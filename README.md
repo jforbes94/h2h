@@ -8,4 +8,4 @@ the first table shows the total Head to Head Records in a grid.
 The 2nd table breaks that data down further.
 
 
-[View HTML Table](https://jforbes.github.io/h2h/styled_h2h_agg.html)
+[View HTML Table](https://jforbes.github/h2h/styled_h2h_agg.html)
