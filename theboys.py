@@ -132,9 +132,4 @@ h2h_agg.to_html('styled_h2h_agg.html', classes='table table-striped', escape=Fal
 
 pivot_df = h2h_agg.pivot(index='Team1', columns='Team2', values='Result')
 
-
-styled_html = pivot_df.style.applymap(lambda x: 'text-align: center; font-size: 12px;').render()
-
-# Save the HTML output to a file
-with open('styled_pivot_df.html', 'w') as f:
-    f.write(styled_html)
+pivot_df.to_html('styled_h2h_pivot.html',classes='table table-striped', escape=False, render_links=True)
