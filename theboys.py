@@ -128,7 +128,19 @@ h2h_agg['win%'] = h2h_agg['Team1Result'] / (h2h_agg['Team1Result'] + h2h_agg['Te
 def style_grid(val):
     return 'text-align: center; font-size: 12px;'
 
-h2h_agg.to_html('styled_h2h_agg.html', classes='table table-striped', escape=False, render_links=True)
+
+
+teamlevel = h2h_agg[(h2h_agg['Team1'] != h2h_agg['Team2'])]
+teamlevel = teamlevel .groupby(['Team1'])[['Team1Result', 'Team2Result']].sum().reset_index()
+teamlevel['win%'] = teamlevel['Team1Result'] / (teamlevel['Team1Result'] + teamlevel['Team2Result'])
+
+teamlevel = teamlevel.rename(columns={'Team1Result':'Wins','Team2Result':'Losses:'})
+
+teamlevel = teamlevel.sort_values(by='win%', ascending=False)
+
+
+
+teamlevel.to_html('styled_h2h_agg.html', classes='table table-striped', escape=False, render_links=True)
 
 pivot_df = h2h_agg.pivot(index='Team1', columns='Team2', values='Result')
 
