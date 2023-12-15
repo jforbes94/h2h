@@ -71,18 +71,18 @@ for i in r:
 
 df = df.rename(columns={'String':'Team'})
 
-# Create a list of all possible team combinations
+
 team_combinations = list(itertools.combinations(df['Team'], 2))
 team_combinations= list(OrderedDict.fromkeys(team_combinations))
 
 val = '.value'
 stats_ls = [item + val for item in stats_ls]
 
-# Create an empty dataframe to store the results
+
 h2h= pd.DataFrame(columns=['Team1', 'Team2','Week','Team1Cat','Team2Cat','TieCat'])
 
 
-# Loop through each team combination and calculate the head-to-head record
+
 for team1, team2 in team_combinations:
     
     for w in r:
@@ -119,7 +119,7 @@ team2_results = [1, 0, 0.5]
 # Apply the conditions and store the numerical result in a new column 'Team2Result'
 h2h['Team2Result'] = np.select(team2_conditions, team2_results, default=0)
 
-# Group by 'Team 1' and 'Team 2' and sum the numerical results
+
 h2h_agg = h2h.groupby(['Team1', 'Team2'])[['Team1Result', 'Team2Result']].sum().reset_index()        
 h2h_agg['Result'] = h2h_agg.apply(lambda row: f"{row['Team1Result']}-{row['Team2Result']}", axis=1)
 h2h_agg['win%'] = h2h_agg['Team1Result'] / (h2h_agg['Team1Result'] + h2h_agg['Team2Result'])
