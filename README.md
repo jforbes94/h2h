@@ -1,9 +1,10 @@
 # h2h
 
+BANJO or Basketball All-around Numbers, Juxtaposed Opponent Power Rankings will calculate based on all completed matchups (through week 7) what your season long record would be if you played all 11 opponents each week rather than just 1.
 
-Generates code to compare all 12 Teams against each other rather than specific match ups. It builds off the code founder here. https://github.com/cwendt94/espn-api
+It builds off the code found here. https://github.com/cwendt94/espn-api
 
-the first table shows the total Head to Head Records in a grid. 
+The first table shows the total Head to Head Records in a grid. 
 
 <table border="1" class="dataframe table table-striped">
   <thead>
@@ -222,7 +223,7 @@ the first table shows the total Head to Head Records in a grid.
   </tbody>
 </table>
 
-The 2nd table summarizes that breakdown to create a 2nd version of Power Rankings
+The 2nd table summarizes that breakdown to create a 2nd version of Power Rankings based on total win % in the top grid
 
 
 <table border="1" class="dataframe table table-striped">
