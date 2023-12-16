@@ -15,11 +15,21 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import os
+
+
+espn_s2 = os.environ.get('ESPN_S2')
+swid = os.environ.get('SWID')
+
+# Use the values in your code
+print(f"ESPN_S2: {espn_s2}")
+print(f"SWID: {swid}")
 
 
 league = League(league_id=1950930852, year=2024,
-                espn_s2='AEAHYXzoj0cXvr40Km3qw88SYdsjIqfvgHKC%2BGtt4shXebf8YI5w3aXFc4eNXiHDX0xhBZimCEa92pYgi61uWMk7ujhN0MorP73HscDcueesz6X8pbPxfi5J8srPWChHsLP55HQo2qFMb%2BxkhR6PEKqQN7diWbQMG3%2FfseoLFpfNzUNfaraLrBk3PfTJMDfZkqrwFphc3UfHTaRfNNdsfwSDmAWPlxNEf2wHe%2F6I5ApwnAd%2Fqeb3BOlO6NWPIPFXPlUbI9Rb1944%2BIproR%2FAST3nmD8eBU6p8oAFE4NaPXrW%2Bw%3D%3D',
-                swid='{3D5E88B2-B429-4AEF-9E88-B2B4295AEF73}')
+                espn_s2=espn_s2,
+                swid=swid)
+ 
 
 
 ls = list(range(13))
@@ -137,6 +147,10 @@ teamlevel['win%'] = teamlevel['Team1Result'] / (teamlevel['Team1Result'] + teaml
 teamlevel = teamlevel.rename(columns={'Team1Result':'Wins','Team2Result':'Losses:'})
 
 teamlevel = teamlevel.sort_values(by='win%', ascending=False)
+
+teamlevel = teamlevel.reset_index(drop = True)
+
+    
 
 
 
