@@ -61,9 +61,8 @@ for stat in stats_ls:
 
 df = pd.DataFrame()
 
-r= range(1,league.currentMatchupPeriod+1,1)
+r= range(1,league.currentMatchupPeriod,1)
 for i in r:
-
         
     x = league.box_scores(i)
     week= []
@@ -109,14 +108,9 @@ curr_week_gran = curr_week_gran.pivot(index='Team1', columns='Team2', values='Re
 curr_week_gran.to_html('curr_week_granular.html', classes='table table-striped', escape=False, render_links=True)
 curr_week_agg.to_html('curr_week_agg.html',classes='table table-striped', escape=False, render_links=True)
 
-r3_gran,r3_agg = helper.calculate_h2h(df,team_combinations,stats_ls,league.currentMatchupPeriod-3,league.currentMatchupPeriod-1)
-r3_gran= r3_gran.pivot(index='Team1', columns='Team2', values='Result')
-r3_gran.to_html('r3_gran.html', classes='table table-striped', escape=False, render_links=True)
-r3_agg.to_html('r3_agg.html',classes='table table-striped', escape=False, render_links=True)
 
 
 
 
-
-
+print(league.currentMatchupPeriod)
 
