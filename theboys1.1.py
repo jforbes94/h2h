@@ -61,7 +61,7 @@ for stat in stats_ls:
 
 df = pd.DataFrame()
 
-r= range(1,league.currentMatchupPeriod,1)
+r= range(1,league.currentMatchupPeriod+1,1)
 for i in r:
         
     x = league.box_scores(i)
