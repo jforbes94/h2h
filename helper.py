@@ -35,7 +35,6 @@ def compare_stats(stats_ls,stats1,stats2):
     cntT = 0
     
     for i in stats_ls:
-        print(i)
         
         st1 = stats1.loc[0, i]
         st2 = stats2.loc[0, i]
@@ -68,7 +67,6 @@ def calculate_h2h(df,team_combinations,stats_ls,starting_week =1,ending_week=8):
         
         for w in range(starting_week,ending_week+1):
             
-            print(w)
             temp = df[df['week'] ==w]
             stats1 = temp[temp['Team'] == team1][stats_ls].reset_index(drop=True)
             stats2 = temp[temp['Team'] == team2][stats_ls].reset_index(drop=True)
