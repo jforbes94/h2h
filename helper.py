@@ -58,6 +58,35 @@ def compare_stats(stats_ls,stats1,stats2):
     return cnt1,cnt2,cntT
 
 
+def calculate_matchup(h2h,stats_ls):
+    
+    num_cats = float(len(stats_ls))
+    
+    team1_conditions = [
+        (h2h['Team1Cat'] > num_cats / 2),  # Team 1 wins
+        (h2h['Team2Cat'] >= num_cats / 2),  # Team 1 loses
+        (h2h['Team1Cat'] == h2h['Team2Cat'])  # Tie
+    ]
+    
+    team1_results = [1, 0, 0.5]
+
+    # Apply the conditions and store the numerical result in a new column 'Team1Result'
+    h2h['Team1Result'] = np.select(team1_conditions, team1_results, default=0)
+    
+    team2_conditions = [
+        (h2h['Team2Cat'] > num_cats / 2),  # Team 2 wins
+        (h2h['Team1Cat'] > num_cats / 2),  # Team 2 loses
+        (h2h['Team2Cat'] == h2h['Team1Cat'])  # Tie
+    ]
+
+    team2_results = [1, 0, 0.5]
+
+    # Apply the conditions and store the numerical result in a new column 'Team2Result'
+    h2h['Team2Result'] = np.select(team2_conditions, team2_results, default=0)
+    
+    return h2h
+
+
 def calculate_h2h(df,team_combinations,stats_ls,starting_week =1,ending_week=8):
     
     h2h= pd.DataFrame(columns=['Team1', 'Team2','Week','Team1Cat','Team2Cat','TieCat'])
@@ -74,30 +103,8 @@ def calculate_h2h(df,team_combinations,stats_ls,starting_week =1,ending_week=8):
             cnt1,cnt2,cnt3 = helper.compare_stats(stats_ls,stats1, stats2)
             h2h.loc[len(h2h)] = [team1,team2,w,cnt1,cnt2,cnt3]
             
-            
-    # Define conditions and corresponding numerical values for Team 1
-    team1_conditions = [
-        (h2h['Team1Cat'] >= 5),  # Team 1 wins
-        (h2h['Team1Cat'] < 5) & (h2h['Team2Cat'] >= 5),  # Team 1 loses
-        (h2h['Team1Cat'] == h2h['Team2Cat'])  # Tie
-    ]
-
-    team1_results = [1, 0, 0.5]
-
-    # Apply the conditions and store the numerical result in a new column 'Team1Result'
-    h2h['Team1Result'] = np.select(team1_conditions, team1_results, default=0)
-
-    # Define conditions and corresponding numerical values for Team 2 (reversed logic)
-    team2_conditions = [
-        (h2h['Team2Cat'] >= 5),  # Team 2 wins
-        (h2h['Team2Cat'] < 5) & (h2h['Team1Cat'] >= 5),  # Team 2 loses
-        (h2h['Team2Cat'] == h2h['Team1Cat'])  # Tie
-    ]
-
-    team2_results = [1, 0, 0.5]
-
-    # Apply the conditions and store the numerical result in a new column 'Team2Result'
-    h2h['Team2Result'] = np.select(team2_conditions, team2_results, default=0)
+    h2h = calculate_matchup(h2h, stats_ls)
+    
 
 
     h2h_agg = h2h.groupby(['Team1', 'Team2'])[['Team1Result', 'Team2Result']].sum().reset_index()        
