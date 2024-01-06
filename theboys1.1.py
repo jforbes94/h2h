@@ -91,71 +91,26 @@ stats_ls = [item + val for item in stats_ls]
 
 h2h= pd.DataFrame(columns=['Team1', 'Team2','Week','Team1Cat','Team2Cat','TieCat'])
 
+Season_gran,Season_agg = helper.calculate_h2h(df,team_combinations,stats_ls,1,league.currentMatchupPeriod-1)
+Season_gran = Season_gran.pivot(index='Team1', columns='Team2', values='Result')
+Season_gran.to_html('Season_granular_.html', classes='table table-striped', escape=False, render_links=True)
+Season_agg.to_html('Season_agg.html',classes='table table-striped', escape=False, render_links=True)
 
 
-for team1, team2 in team_combinations:
-    
-    for w in r:
-        temp = df[df['week'] ==w]
-        i = 'PTS.value'
-        stats1 = temp[temp['Team'] == team1][stats_ls].reset_index(drop=True)
-        stats2 = temp[temp['Team'] == team2][stats_ls].reset_index(drop=True)
-       
-        cnt1,cnt2,cnt3 = helper.compare_stats(stats1, stats2)
-        h2h.loc[len(h2h)] = [team1,team2,w,cnt1,cnt2,cnt3]
-        
-        
-# Define conditions and corresponding numerical values for Team 1
-team1_conditions = [
-    (h2h['Team1Cat'] >= 5),  # Team 1 wins
-    (h2h['Team1Cat'] < 5) & (h2h['Team2Cat'] >= 5),  # Team 1 loses
-    (h2h['Team1Cat'] == h2h['Team2Cat'])  # Tie
-]
-
-team1_results = [1, 0, 0.5]
-
-# Apply the conditions and store the numerical result in a new column 'Team1Result'
-h2h['Team1Result'] = np.select(team1_conditions, team1_results, default=0)
-
-# Define conditions and corresponding numerical values for Team 2 (reversed logic)
-team2_conditions = [
-    (h2h['Team2Cat'] >= 5),  # Team 2 wins
-    (h2h['Team2Cat'] < 5) & (h2h['Team1Cat'] >= 5),  # Team 2 loses
-    (h2h['Team2Cat'] == h2h['Team1Cat'])  # Tie
-]
-
-team2_results = [1, 0, 0.5]
-
-# Apply the conditions and store the numerical result in a new column 'Team2Result'
-h2h['Team2Result'] = np.select(team2_conditions, team2_results, default=0)
+prev_week_gran,prev_week_agg = helper.calculate_h2h(df,team_combinations,stats_ls,league.currentMatchupPeriod-1,league.currentMatchupPeriod-1)
+prev_week_gran = prev_week_gran.pivot(index='Team1', columns='Team2', values='Result')
+prev_week_gran.to_html('prev_week_granular_.html', classes='table table-striped', escape=False, render_links=True)
+prev_week_agg.to_html('prev_week_agg.html',classes='table table-striped', escape=False, render_links=True)
 
 
-h2h_agg = h2h.groupby(['Team1', 'Team2'])[['Team1Result', 'Team2Result']].sum().reset_index()        
-h2h_agg['Result'] = h2h_agg.apply(lambda row: f"{row['Team1Result']}-{row['Team2Result']}", axis=1)
-h2h_agg['win%'] = h2h_agg['Team1Result'] / (h2h_agg['Team1Result'] + h2h_agg['Team2Result'])
-
-
-def style_grid(val):
-    return 'text-align: center; font-size: 12px;'
+curr_week_gran,curr_week_agg = helper.calculate_h2h(df,team_combinations,stats_ls,league.currentMatchupPeriod,league.currentMatchupPeriod)
+curr_week_gran = curr_week_gran.pivot(index='Team1', columns='Team2', values='Result')
+curr_week_gran.to_html('curr_week_granular.html', classes='table table-striped', escape=False, render_links=True)
+curr_week_agg.to_html('curr_week_agg.html',classes='table table-striped', escape=False, render_links=True)
 
 
 
-teamlevel = h2h_agg[(h2h_agg['Team1'] != h2h_agg['Team2'])]
-teamlevel = teamlevel .groupby(['Team1'])[['Team1Result', 'Team2Result']].sum().reset_index()
-teamlevel['win%'] = teamlevel['Team1Result'] / (teamlevel['Team1Result'] + teamlevel['Team2Result'])
-
-teamlevel = teamlevel.rename(columns={'Team1Result':'Wins','Team2Result':'Losses:'})
-
-teamlevel = teamlevel.sort_values(by='win%', ascending=False)
-
-teamlevel = teamlevel.reset_index(drop = True)
-
-    
 
 
+print(league.currentMatchupPeriod)
 
-teamlevel.to_html('styled_h2h_agg.html', classes='table table-striped', escape=False, render_links=True)
-
-pivot_df = h2h_agg.pivot(index='Team1', columns='Team2', values='Result')
-
-pivot_df.to_html('styled_h2h_pivot.html',classes='table table-striped', escape=False, render_links=True)
